@@ -59,13 +59,16 @@ class CRepetationalThread(threading.Thread):
         self.endFlg = True
         super().join()
         
+    def getRepetitionNum(self):
+        return self.repetitionNum
+        
         
 if __name__ == "__main__":
     
     class test(CRepetationalThread):
         def __init__(self):
-            super().__init__()
-            self.interval = 0.2
+            super().__init__(0.2)
+            #self.interval = 0.2
             
         def func(self):
             print(self.repetitionNum)

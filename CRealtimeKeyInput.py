@@ -9,31 +9,49 @@ Created on Mon Nov 23 22:23:28 2020
 import sys
 import termios
 import time
+import threading
 
-class CRealtimeKeyInput:
+class CRealtimeKeyInput(threading.Thread):
     def __init__(self):
-        self.key = ''
-        
+        super().__init__()
+        self.key = ""
+        self.newFlg = False
+        self.endFlg = False
         self.fd = sys.stdin.fileno()
         self.newTermios = termios.tcgetattr(self.fd)
         self.oldTermios = termios.tcgetattr(self.fd)
         self.newTermios[3] &= ~termios.ICANON
         self.newTermios[3] &= ~termios.ECHO
+        
         termios.tcsetattr(self.fd, termios.TCSANOW, self.newTermios)
 
-    def keyInput(self):
-        self.key = sys.stdin.read(1)
-    
+    def hasNewKey(self):
+        return self.newFlg
+
+    def getKeyInput(self):
+        key = sys.stdin.read(1)
+        self.key = key
+        self.newFlg = True
+        
     def keyInputEcho( self ):
-        self.keyInput()
+        self.getKeyInput()
         print( self.key, end = '')
         sys.stdout.flush()
             
     def getKey(self):
+        self.newFlg= False
         return self.key
-        
+    
+    def run(self):
+        while not self.endFlg:
+            self.getKeyInput()
+                      
+    def stop(self):
+        self.endFlg = True
+    
     def finish(self):
         termios.tcsetattr(self.fd, termios.TCSANOW, self.oldTermios)
+        
         
 if __name__ == "__main__":
     rki = CRealtimeKeyInput()

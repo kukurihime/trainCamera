@@ -6,38 +6,50 @@ Created on Sun May 31 12:49:06 2020
 @author: kukurihime
 """
 import paho.mqtt.client as mqtt
-import CTrainStatus
+import CTrainControler
+import time
 
 class CTrainCameraMQTTSub:
-    def __init__(self, ts):
-        self.ts = ts
-        
+    def __init__(self, tc):
+        self.tc = tc
         self.host = '127.0.0.1'
         self.port = 1883
-        self.topic = 'trainCameraOrder'
+        self.topic = 'trainCamera/command'
         self.client = mqtt.Client(protocol = mqtt.MQTTv311)
         self.keepalive = 60
-
+        self.reconnectWaitTime = 0.5
         
-        self.client.on_connect = self.on_connect
-        self.client.on_message = self.on_message
-        try:
-            self.connect()
-        except ConnectionRefusedError as e:
-            self.ts.setMQTTConnected(False)
-        else:
-            self.ts.setMQTTConnected(True)
+        self.client.on_connect = self.onConnect
+        self.client.on_disconnect = self.onDisconnect
+        self.client.on_message = self.onMessage
+        
+        self.connect()
+        
+        self.com = ""
             
     def connect(self):
-        self.client.connect(self.host, port = self.port, keepalive = self.keepalive)
-        self.client.loop_forever()
+        try:
+            self.client.connect(self.host, port = self.port, keepalive = self.keepalive)
+        except ConnectionRefusedError as e:
+            self.tc.setMQTTConnected(False)
+            return False
+        else:
+            self.tc.setMQTTConnected(True)
         
-    def on_connect(self, client, userdata, flags, respons_code):
-        print('status{0}'.format(respons_code))
+        self.client.loop_start()
         
+    def isConnected(self):
+        return self.client.isconnected()
+        
+    def onConnect(self, client, userdata, flags, responsCode):
+        self.tc.setMQTTConnected(responsCode)
         client.subscribe(self.topic)
         
-    def on_message(self, client, userdata, msg):
-        print(msg.topic + ' ' + str(msg.payload))
+    def onDisconnect(self,client, userdata, flags, responsCode):
+        self.tc.setMQTTConnected(responsCode)
         
+    def onMessage(self, client, userdata, msg):
+        self.com = msg.payload
+        self.com = self.com.decode()
+        self.tc.setCommand(self.com)
         
