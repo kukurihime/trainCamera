@@ -56,7 +56,7 @@ class CRPiControler:
             if self.dummyFlg:
                 return
             
-            self.pi.hardware_PWM(pin, self.rpc.freq, self.PWMDuty(dutyRatio))
+            self.pi.hardware_PWM(pin, self.freq, self.PWMDuty(dutyRatio))
         
         def PWMStop(self, pin):
             if self.dummyFlg:
