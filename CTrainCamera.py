@@ -17,7 +17,7 @@ class CTrainCamera(CRepetationalThread.CRepetationalThread):
 
         self.tcms = CTrainCameraMQTTSub.CTrainCameraMQTTSub(self.tc)
         
-        self.tcv.start()
+        #self.tcv.start()
         
     def func(self):
         #if not self.tcms.isConnected():

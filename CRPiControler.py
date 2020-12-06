@@ -49,8 +49,8 @@ class CRPiControler:
             self.pi.set_mode(self.ledP, pigpio.INPUT)
             self.pi.stop()
 
-        def PWMDuty(self, DutyRatio):
-            return int(self.raspberryPiPWMValue * DutyRatio)
+        def PWMDuty(self, dutyRatio):
+            return int(self.raspberryPiPWMValue * dutyRatio)
         
         def PWMOutput(self, pin, dutyRatio):
             if self.dummyFlg:
@@ -68,7 +68,7 @@ class CRPiControler:
             if self.dummyFlg:
                 return
             
-            self.pi.write(pin, self.L)
+            self.pi.write(pin, self.H)
             
         def off(self, pin):
             if self.dummyFlg:
