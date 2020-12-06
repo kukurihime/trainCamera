@@ -40,8 +40,6 @@ class CTrainControler:
         self.ts.setStatusFromTarget()
     
     def run(self):
-        print(str(type(self.ts.getStatusAt(0))))
-        print(self.ts.getStatusAt(0))
         self.outputPWMPair(self.speedTable[self.ts.getStatusAt(0)])
         
         
