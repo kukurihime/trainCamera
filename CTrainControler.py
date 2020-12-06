@@ -64,8 +64,8 @@ class CTrainControler:
         
     
     def outputPWMPair(self, PWMPair):
-        self.rpc.PWMOutput(self.rpc.in1P, self.rpc.PWMDuty(PWMPair[0]))
-        self.rpc.PWMOutput(self.rpc.in2P, self.rpc.PWMDuty(PWMPair[1]))
+        self.rpc.PWMOutput(self.rpc.in1P, PWMPair[0])
+        self.rpc.PWMOutput(self.rpc.in2P, PWMPair[1])
         
     
     def setMQTTConnected(self, flg):
