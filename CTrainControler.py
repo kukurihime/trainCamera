@@ -17,9 +17,10 @@ class CTrainControler:
                            1:(0.6, 0.0), \
                            2:(0.7, 0.0), \
                            3:(0.8, 0.0), \
-                           4:(0.9, 0.0) \
+                           4:(0.9, 0.0), \
+                           5:(1.0, 0.0)
                            }
-        self.maxSpeed = 4
+        self.maxSpeed = 5
         self.minSpeed = -1
         self.rpcMode = True #full functional mode
         if self.ts.getSystemMode() == 'dummy': 
